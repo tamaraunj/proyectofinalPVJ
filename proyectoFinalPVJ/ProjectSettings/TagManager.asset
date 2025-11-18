@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Piso
+  - Fusible
   layers:
   - Default
   - TransparentFX
