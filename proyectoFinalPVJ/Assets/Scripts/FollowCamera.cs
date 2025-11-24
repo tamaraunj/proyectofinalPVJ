@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
-    public float sensibilidad = 100f;
+    public float sensibilidad = 50f;
     public float rotacionX = 0f;
     public Transform jugador;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
