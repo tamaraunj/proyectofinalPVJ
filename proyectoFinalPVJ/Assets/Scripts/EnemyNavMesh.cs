@@ -10,6 +10,12 @@ public class EnemyNavMesh : MonoBehaviour
     [SerializeField] private float radioPatrulla; //Rango para elegir puntos aleatorios donde el enemigo deambulará
     [SerializeField] private float tiempoEntrePuntos; //Tiempo para cambiar el punto si no llegó el enemigo
 
+    //ATAQUE
+    [SerializeField] private float rangoAtaque; //Distancia a la cual ataca al jugador
+    [SerializeField] private float tiempoEntreAtaques; //Tiempo para hacer otro ataque
+    private int dañoAlJugador = 1;
+    private bool puedeAtacar = true;
+
     private float temporizador; //Temporizador para saber cuándo hay que cambiar de punto
     private Vector3 puntoPatrulla; //Punto actual al que camina el enemigo
     private bool persiguiendo; //Para saber si el enemigo persigue o no al jugador
@@ -43,6 +49,12 @@ public class EnemyNavMesh : MonoBehaviour
     {
         enemigo.speed = velocidadEnemigo;
         enemigo.SetDestination(jugador.position);
+        
+        //Si está muy cerca del jugador lo ataca
+        if (distancia <= rangoAtaque)
+        {
+            Atacar();
+        }
     }
 
     void Deambular()
@@ -71,7 +83,19 @@ public class EnemyNavMesh : MonoBehaviour
             puntoPatrulla = hit.position; //Se asigna un punto válido del navmesh
         }
     }
+    void Atacar()
+    {
+        if(!puedeAtacar) return;    
+        puedeAtacar = false;
+        Debug.Log("El ENEMIGO ATACA");
+        jugador.GetComponent<PlayerLife>().RestarVida(dañoAlJugador); //Resta 1 vida al jugador
+        Invoke(nameof(ResetearAtaque), tiempoEntreAtaques);
+    }
 
+    void ResetearAtaque()
+    {
+        puedeAtacar = true;
+    }
 
     private void OnDrawGizmos()
     {
@@ -82,5 +106,9 @@ public class EnemyNavMesh : MonoBehaviour
         //Dibuja el radio donde busca puntos aleatorios
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, radioPatrulla);
+
+        //Rango de ataque
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, rangoAtaque);
     }
 }
